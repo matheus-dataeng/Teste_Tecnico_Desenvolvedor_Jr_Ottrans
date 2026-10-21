@@ -1,7 +1,9 @@
+-- DEMANDA TOTAL JANEIRO
 SELECT
-    SUM(demanda_jan) AS demanda_total_jan
-FROM public.demanda_janeiro_2022
+    ROUND(SUM(demanda_jan), 2) AS demanda_total_jan
+FROM demanda_janeiro_2022;
 
+--DEMANDA TOTAL FEVEREIRO
 SELECT
-    SUM(demanda_fev) AS demanda_total_fev
-FROM public.demanda_fevereiro_2022
+    ROUND(SUM(demanda_fev), 2) AS demanda_total_fev
+FROM demanda_fevereiro_2022;

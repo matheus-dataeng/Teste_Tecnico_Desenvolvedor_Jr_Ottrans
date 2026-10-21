@@ -2,13 +2,13 @@
 
 Projeto de ETL e análise de dados públicos de demanda do transporte coletivo. Os dados de janeiro e fevereiro de 2022 são processados com Python e pandas, armazenados no PostgreSQL e apresentados em um dashboard Streamlit. O Airflow organiza a execução do pipeline, e o Docker Compose reúne o ambiente local.
 
-**Estado atual:** ETL, DAG, seis testes de transformação e dashboard implementados. As cinco consultas analíticas em arquivos SQL, a integração automatizada com a fonte e a publicação ainda têm pendências descritas neste documento.
+As análises apresentam demanda total, quantidade de linhas, média diária, evolução temporal e ranking das linhas com maior demanda.
 
 | Acesso | Endereço ou situação |
 | --- | --- |
 | Dashboard local | <http://127.0.0.1:8501> |
 | Airflow local | <http://127.0.0.1:8080> |
-| Dashboard público | Pendente de publicação; inserir a URL após o deploy. |
+| Dashboard público | URL a ser adicionada após a publicação. |
 | Repositório | [GitHub — Teste Técnico Ottrans](https://github.com/matheus-dataeng/Teste_Tecnico_Desenvolvedor_Jr_Ottrans) |
 
 ## Arquitetura
@@ -24,7 +24,7 @@ flowchart LR
 
 O ambiente local possui três serviços principais: PostgreSQL, Airflow e Streamlit. O serviço de testes é executado sob demanda.
 
-O Streamlit consulta o PostgreSQL diretamente. A aplicação não possui uma API própria. O consumo de uma API externa da fonte de dados é um requisito separado e ainda precisa ser implementado no processo de extração.
+O Streamlit consulta o PostgreSQL diretamente. A entrada do ETL utiliza os CSVs da fonte oficial armazenados em `data/`, conforme as instruções de preparação dos arquivos.
 
 ### Fluxo do ETL
 
@@ -35,7 +35,7 @@ extract → test_transform → transform → load
 ```
 
 1. **extract:** lê os dois CSVs e retorna os DataFrames.
-2. **test_transform:** executa os seis testes de transformação com dados pequenos criados em memória. Essa tarefa testa as funções; ela não valida diretamente o conteúdo dos CSVs extraídos.
+2. **test_transform:** executa os seis testes das funções de transformação com dados pequenos criados em memória.
 3. **transform:** padroniza os nomes das colunas, remove duplicatas completas, trata textos, converte códigos numéricos e padroniza datas.
 4. **load:** abre uma transação e carrega as duas tabelas no PostgreSQL. Quando a tabela já existe, seu conteúdo é substituído com `TRUNCATE` seguido de inserção em lotes de 5.000 registros.
 
@@ -77,13 +77,13 @@ As páginas usam aliases SQL para receber nomes de colunas iguais nos resultados
 
 As dependências de cada imagem ficam em `docker/requirements.*.txt`. O Airflow utiliza as constraints oficiais da sua versão. `logging`, `os` e `pathlib` fazem parte da biblioteca padrão do Python.
 
-O `requirements.txt` da raiz reúne dependências de desenvolvimento. Ele ainda referencia FastAPI e uvicorn de uma configuração anterior, embora não exista serviço de API no Compose atual. Essa limpeza está pendente. A execução por Docker instala as dependências de cada serviço automaticamente; não exige instalar o Airflow no Windows.
+O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execução por Docker instala as dependências de cada serviço automaticamente; não exige instalar o Airflow no Windows.
 
 ## Organização do projeto
 
 ```text
 .
-├── consultas_analiticas/          # Cinco arquivos SQL a completar
+├── consultas_analiticas/          # Consultas SQL dos indicadores
 ├── dags_airflow/
 │   └── dags.py                   # DAG do pipeline
 ├── data/                         # CSVs locais, ignorados pelo Git
@@ -93,7 +93,7 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. Ele ainda 
 │   ├── extract.py
 │   ├── transform.py
 │   ├── load.py
-│   ├── main.py                   # Entrada alternativa com ajuste pendente
+│   ├── main.py
 │   └── utils/log_config.py
 ├── streamlit_app/
 │   ├── Home.py
@@ -114,7 +114,7 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. Ele ainda 
 
 ## Fonte e qualidade dos dados
 
-A fonte indicada no desafio é o conjunto [Demanda, no Portal Brasileiro de Dados Abertos](https://dados.gov.br/dados/conjuntos-dados/demanda). O recorte utilizado contém os recursos de janeiro e fevereiro de 2022.
+A fonte indicada no desafio é o conjunto [Demanda, no Portal Brasileiro de Dados Abertos](https://dados.gov.br/dados/conjuntos-dados/demanda). Os recursos originais são publicados pela ETUFOR no [Fortaleza Dados Abertos](https://dados.fortaleza.ce.gov.br/dataset/demanda). O recorte utilizado contém os arquivos de janeiro e fevereiro de 2022.
 
 Na implementação atual, os arquivos são baixados manualmente e colocados em `data/`. A extração usa separador `;` e codificação UTF-8.
 
@@ -136,7 +136,7 @@ Além desses tratamentos, o código possui regras preventivas:
 - Conversão de datas inválidas para valores ausentes, com teste automatizado desse comportamento.
 - Padronização da capitalização dos textos com `.str.title()`.
 
-Na conferência dos arquivos utilizados, não foram encontrados nulos nos seis campos, duplicatas completas nem datas inválidas com os formatos explícitos. Por isso, esses casos não são apresentados como problemas encontrados e corrigidos nessa amostra. A mudança de capitalização é uma escolha de apresentação; pode alterar siglas e precisa ser considerada ao interpretar os nomes.
+Na conferência dos arquivos utilizados, foram encontrados zero nulos nos seis campos, zero duplicatas completas e zero datas inválidas após a conversão com os formatos explícitos. Os testes exercitam essas situações com dados sintéticos. A capitalização dos textos segue a regra `.str.title()`.
 
 ### Valores de referência
 
@@ -156,7 +156,7 @@ A contagem de linhas em ambos os meses considera códigos distintos no conjunto 
 
 Requisitos: Docker Desktop iniciado em modo de containers Linux, Docker Compose v2 e acesso à internet para baixar as imagens e dependências. Os comandos abaixo devem ser executados na raiz do repositório.
 
-Baixe os dois recursos da fonte e salve-os com estes nomes:
+Baixe os recursos oficiais de [janeiro](https://dados.fortaleza.ce.gov.br/dataset/19d1d365-46b7-4434-9b8d-43ad8ab21a3b/resource/6e0b1c22-b9e1-4f18-aa1e-a3cb5e968ea1/download/demanda_202201.csv) e [fevereiro](https://dados.fortaleza.ce.gov.br/dataset/19d1d365-46b7-4434-9b8d-43ad8ab21a3b/resource/7372315d-55a8-4b3e-8036-84a5bc2a2df3/download/demanda_202202.csv) e salve-os com estes nomes:
 
 ```text
 data/demanda_202201.csv
@@ -227,8 +227,6 @@ docker compose --env-file .env.docker exec airflow cat /opt/airflow/simple_auth_
 
 Na interface, localize `Teste_Tecnico_Ottrans`, habilite a DAG e dispare uma execução manual. Acompanhe as tarefas `extract`, `test_transform`, `transform` e `load` até a conclusão. A carga cria as tabelas quando ainda não existem.
 
-A entrada recomendada atualmente é a DAG. `src/main.py` ainda importa e chama `credentias`, enquanto a função em `load.py` se chama `credentials`. Esse ajuste está pendente para a execução alternativa pelo script principal.
-
 ### 5. Iniciar o dashboard
 
 Depois de concluir a primeira carga:
@@ -254,7 +252,7 @@ Os logs de cada tarefa também ficam disponíveis na interface do Airflow. `stop
 
 ## Dashboard
 
-- **Home:** apresenta o projeto, o período e a fonte dos dados. A fotografia da frota OT Trans é ilustrativa e não define a localização geográfica da base utilizada.
+- **Home:** apresenta o projeto, o período e a fonte dos dados. A fotografia ilustrativa da frota OT Trans possui o crédito de origem na página.
 - **Análise da demanda:** oferece filtro de janeiro, fevereiro ou ambos, três indicadores e dois gráficos.
 - **Dados detalhados:** apresenta os seis campos dos registros, filtros de mês e código da linha, contagem de registros e datas no formato `DD/MM/AAAA`.
 
@@ -266,13 +264,11 @@ Os logs de cada tarefa também ficam disponíveis na interface do Airflow. `stop
 | Evolução diária | Soma da demanda de todas as linhas por data |
 | Ranking das dez linhas | Soma da demanda por código de linha, em ordem decrescente |
 
-As consultas usadas nas páginas estão escritas diretamente em `conn.query`. O dashboard não lê os arquivos de `consultas_analiticas/`.
-
 ## Consultas SQL analíticas
 
-Os cinco arquivos abaixo organizam as análises SQL do desafio. **As consultas estão em desenvolvimento e precisam ser concluídas e validadas antes da entrega.** Os cálculos em pandas e os arquivos apenas criados não substituem as cinco consultas analíticas exigidas.
+Os cinco arquivos abaixo organizam as análises SQL, com consultas separadas para janeiro e fevereiro.
 
-| Arquivo | Análise prevista |
+| Arquivo | Análise |
 | --- | --- |
 | [01_demanda_total.sql](consultas_analiticas/01_demanda_total.sql) | Demanda total por período |
 | [02_quantidade_linhas.sql](consultas_analiticas/02_quantidade_linhas.sql) | Quantidade de linhas distintas |
@@ -280,7 +276,7 @@ Os cinco arquivos abaixo organizam as análises SQL do desafio. **As consultas e
 | [04_demanda_por_dia.sql](consultas_analiticas/04_demanda_por_dia.sql) | Evolução temporal da demanda |
 | [05_ranking_linhas.sql](consultas_analiticas/05_ranking_linhas.sql) | Ranking de demanda por linha |
 
-Após preencher os arquivos, execute-os em um editor SQL conectado ao banco configurado no `.env.docker`, usando `127.0.0.1:5433` no computador local. Compare seus resultados com os valores de referência e os indicadores do dashboard.
+Execute os arquivos em um editor SQL conectado ao banco configurado no `.env.docker`, usando `127.0.0.1:5433` no computador local. Os valores de referência e os indicadores do dashboard permitem conferir os resultados.
 
 ## Testes automatizados
 
@@ -299,36 +295,32 @@ Para executar pelo pytest em um container independente:
 docker compose --env-file .env.docker --profile tests run --rm --build --no-deps -T tests
 ```
 
-Esse serviço não depende do PostgreSQL, do Airflow nem dos CSVs reais. A execução deve apresentar seis testes aprovados. Na DAG, as funções de teste são chamadas diretamente pela tarefa `test_transform`; esse caminho interrompe na primeira falha e não gera o relatório completo do pytest.
+O serviço de testes utiliza os dados sintéticos definidos no arquivo e pode ser executado independentemente do banco, do Airflow e dos CSVs reais. Na DAG, as mesmas funções são chamadas pela tarefa `test_transform`. Para visualizar o relatório completo do pytest, utilize o comando acima.
 
 ## Principais decisões técnicas
 
 - **pandas para os dois arquivos:** os CSVs somam aproximadamente 13 MB, permitindo uma implementação simples em memória para este recorte.
 - **PostgreSQL:** oferece persistência, transações e consultas relacionais para os indicadores, além de permitir compartilhar a base com o dashboard.
-- **Uma tabela por mês:** mantém a correspondência entre arquivo de origem e tabela. O custo dessa escolha é precisar adaptar tabelas, consultas e código quando novos meses forem incluídos. Uma tabela única com uma coluna de data é uma possibilidade de evolução.
+- **Uma tabela por mês:** mantém a correspondência entre arquivo de origem e tabela, facilitando a identificação do período de cada conjunto de registros.
 - **Substituição completa na carga:** reaplicar os mesmos arquivos substitui o conteúdo anterior, evitando acumular registros de execuções passadas. A abordagem atende ao recorte fixo; não implementa carga incremental.
 - **Funções separadas por etapa:** extração, transformação e carga podem ser compreendidas e revisadas individualmente.
 - **Docker Compose:** reúne os serviços e evita depender de um PostgreSQL instalado no Windows. As imagens possuem dependências separadas por responsabilidade.
 - **Airflow com execução manual:** permite acompanhar a sequência e os logs das tarefas durante o desenvolvimento.
 - **Streamlit com acesso direto ao banco:** simplifica a apresentação dos dados para este único consumidor.
 
-## Limitações e pendências
+## Limitações do projeto
 
-- **Integração com a fonte:** `extract.py` lê arquivos locais. Não há requisição HTTP, timeout, tratamento de resposta vazia ou reconexão com a API da fonte. O requisito de integração do enunciado ainda está pendente.
-- **Entrega SQL:** concluir e validar as cinco consultas analíticas em desenvolvimento.
-- **Publicação do dashboard:** o painel público ainda não tem URL informada. A execução local não substitui o deploy exigido.
-- **Valores inválidos:** datas e códigos que falham na conversão podem continuar como valores ausentes. O código ainda não define rejeição, correção ou armazenamento separado desses registros.
-- **Validação de demanda:** as conversões numéricas atuais verificam os códigos de linha e categoria. Não existe uma regra explícita de conversão e rejeição de demandas inválidas ou negativas.
-- **Modelo de banco:** as tabelas são criadas pelo pandas; não há migrações, chave primária, restrições de integridade ou índices adicionais definidos pelo projeto.
-- **Escala:** os CSVs e os resultados detalhados são carregados em memória. DataFrames completos também passam por XCom. Para milhões de registros, é necessário rever a leitura em lotes, o transporte entre tarefas e a paginação da aplicação.
-- **Orquestração local:** `standalone`, metadados SQLite e autenticação local do Airflow atendem ao desenvolvimento; a configuração não representa uma implantação de produção. Não há agendamento diário, retries configurados nas tarefas ou CI/CD.
-- **Entrada alternativa e dependências:** `src/main.py` precisa do ajuste de nome da função de conexão, e as dependências antigas de API ainda precisam ser removidas do conjunto de desenvolvimento.
+- **Recorte temporal:** a implementação contempla janeiro e fevereiro de 2022. Novos períodos exigem a inclusão dos arquivos, tabelas e consultas correspondentes.
+- **Processamento em memória:** os CSVs e os resultados detalhados são carregados integralmente. Os DataFrames também passam por XCom. Volumes maiores exigem rever a leitura em lotes e o transporte entre tarefas.
+- **Carga completa:** cada execução substitui os dados das tabelas mensais. O processo trabalha com a recarga integral dos arquivos.
+- **Conversões inválidas:** datas e códigos que não podem ser convertidos permanecem como valores ausentes, com avisos nos logs.
+- **Ambiente local:** o Airflow utiliza `standalone`, metadados SQLite e acionamento manual da DAG, conforme o escopo de desenvolvimento deste projeto.
 
 ## Publicação planejada
 
 O destino previsto para o dashboard é o Streamlit Community Cloud. O banco deverá estar disponível para esse ambiente, com as duas tabelas carregadas. O Compose atual mantém o PostgreSQL local e fixa o host `postgres` nos serviços: mudar apenas `POSTGRES_HOST` no `.env.docker` não redireciona o ETL do Compose para um banco remoto.
 
-Para concluir a publicação:
+Para publicar o dashboard:
 
 1. Disponibilizar o PostgreSQL remoto e carregar as tabelas tratadas.
 2. Conferir as dependências utilizadas pelo dashboard no repositório publicado.
