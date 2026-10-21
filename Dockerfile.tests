@@ -1,0 +1,16 @@
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+ENV PYTHONPATH=/app \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+COPY docker/requirements.common.txt docker/requirements.test.txt /tmp/requirements/
+RUN pip install --no-cache-dir -r /tmp/requirements/requirements.test.txt
+
+COPY src /app/src
+COPY tests /app/tests
+COPY pytest.ini /app/pytest.ini
+
+CMD ["python", "-m", "pytest", "-v"]

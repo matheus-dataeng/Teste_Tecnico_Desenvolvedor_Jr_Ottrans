@@ -1,0 +1,3 @@
+-r docker/requirements.api.txt
+-r docker/requirements.streamlit.txt
+-r docker/requirements.test.txt

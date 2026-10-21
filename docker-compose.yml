@@ -1,0 +1,112 @@
+name: ottrans_teste_tecnico
+
+x-project-environment: &project-environment
+  PYTHONPATH: /app
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: ${POSTGRES_DB:-ottrans}
+  POSTGRES_USER: ${POSTGRES_USER:-ottrans}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env.docker}
+  ARQUIVO_JANEIRO_2022: /app/data/demanda_202201.csv
+  ARQUIVO_FEVEREIRO_2022: /app/data/demanda_202202.csv
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ottrans}
+      POSTGRES_USER: ${POSTGRES_USER:-ottrans}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env.docker}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    restart: unless-stopped
+    environment:
+      <<: *project-environment
+      AIRFLOW_HOME: /opt/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__PARALLELISM: "2"
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: "2"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "admin:admin"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+    ports:
+      - "127.0.0.1:${AIRFLOW_PORT:-8080}:8080"
+    volumes:
+      - airflow_data:/opt/airflow
+      - ./dags_airflow:/opt/airflow/dags:ro
+      - ./src:/app/src:ro
+      - ./data:/app/data:ro
+      - ./tests:/app/tests:ro
+      - ./pytest.ini:/app/pytest.ini:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import json, urllib.request;
+          result = json.load(urllib.request.urlopen('http://localhost:8080/api/v2/monitor/health', timeout=5));
+          assert all(result.get(component, {}).get('status') == 'healthy' for component in ('metadatabase', 'scheduler', 'dag_processor', 'triggerer'))
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  streamlit:
+    profiles: ["apps"]
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    restart: unless-stopped
+    environment:
+      <<: *project-environment
+    ports:
+      - "127.0.0.1:${STREAMLIT_PORT:-8501}:8501"
+    volumes:
+      - ./streamlit_app:/app/streamlit_app:ro
+      - ./streamlit_app/secrets.toml:/app/.streamlit/secrets.toml:ro
+      - ./src:/app/src:ro
+      - ./data:/app/data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=5).close()"
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  tests:
+    profiles: ["tests"]
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./pytest.ini:/app/pytest.ini:ro
+
+volumes:
+  postgres_data:
+  airflow_data:

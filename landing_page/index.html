@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#15ab68">
+  <meta name="description" content="Apresentação do projeto de análise de demanda no transporte público, desenvolvido para o teste técnico de Analista de Sistemas Júnior.">
+  <title>Mobilidade em Dados | Teste técnico</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Mobilidade em Dados — início">
+        <span class="brand-mark" aria-hidden="true">MD</span>
+        <span class="brand-copy">
+          <strong>Mobilidade em Dados</strong>
+          <small>Teste técnico · OT Trans</small>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Navegação principal">
+        <a href="#projeto">O projeto</a>
+        <a href="#processo">Fluxo dos dados</a>
+        <a href="#acessar">Acessar o projeto <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="inicio" aria-labelledby="titulo-principal">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ANALISTA DE SISTEMAS JÚNIOR</p>
+          <h1 id="titulo-principal">Uma nova leitura para a <span class="accent">demanda do transporte.</span></h1>
+          <p class="hero-description">
+            Dados abertos, tratamento em Python e análises para compreender a
+            movimentação de passageiros. Um projeto que conecta a preparação
+            dos registros à exploração dos resultados.
+          </p>
+          <div class="hero-actions">
+            <!-- Substituir pelo endereço público do Streamlit quando o painel for publicado. -->
+            <a class="button button-primary" href="http://127.0.0.1:8501" target="_blank" rel="noopener noreferrer">
+              Abrir Streamlit local <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-outline" href="#projeto">Conhecer o projeto <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="hero-note">Projeto em desenvolvimento · Dados de janeiro e fevereiro de 2022</p>
+        </div>
+
+        <figure class="hero-visual">
+          <img src="assets/onibus_integra_ottrans.jpg" alt="Ônibus verdes da frota OT Trans, integrante do sistema Integra, alinhados em Salvador." width="1024" height="388" fetchpriority="high">
+          <span class="image-tag">Mobilidade como ponto de partida.</span>
+          <figcaption>
+            Imagem ilustrativa da frota em Salvador (BA).
+            <a href="https://ottrans.com.br/nova-frota-de-onibus-da-ot-trans-amplia-renovacao-do-transporte-publico-de-salvador/" target="_blank" rel="noopener noreferrer">Foto: OT Trans</a>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="project-facts" aria-label="Recorte e estrutura do projeto">
+      <div class="container facts-grid">
+        <div class="fact">
+          <span class="fact-number">02</span>
+          <span class="fact-label">meses de referência<br><strong>Janeiro e fevereiro de 2022</strong></span>
+        </div>
+        <div class="fact">
+          <span class="fact-number">06</span>
+          <span class="fact-label">testes automatizados<br><strong>Regras de transformação</strong></span>
+        </div>
+        <div class="fact">
+          <span class="fact-number">05</span>
+          <span class="fact-label">consultas SQL previstas<br><strong>Indicadores e comparações</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projeto" aria-labelledby="titulo-projeto">
+      <div class="container story-grid">
+        <div class="section-intro">
+          <p class="eyebrow">O PROJETO</p>
+          <h2 id="titulo-projeto">Uma base organizada.<br>Uma análise com contexto.</h2>
+        </div>
+        <div class="story-content">
+          <p>
+            Os registros de transporte ajudam a entender como a demanda se
+            distribui entre dias, linhas e categorias de passageiros. Para
+            explorar essas informações, o primeiro passo é preparar os dados.
+          </p>
+          <p>
+            Neste teste técnico, os arquivos de janeiro e fevereiro de 2022
+            passam por leitura, padronização e validação antes de serem
+            armazenados no PostgreSQL. O Airflow organiza a execução do fluxo,
+            e os testes verificam as regras de transformação com exemplos conhecidos.
+          </p>
+          <p>
+            A etapa analítica está em desenvolvimento, com consultas SQL e uma
+            interface em Streamlit para acompanhar os resultados e explorar os
+            registros. As escolhas e limitações do trabalho serão documentadas
+            junto ao código.
+          </p>
+          <ul class="tech-list" aria-label="Tecnologias utilizadas">
+            <li>Python</li>
+            <li>pandas</li>
+            <li>PostgreSQL</li>
+            <li>Airflow</li>
+            <li>Docker</li>
+            <li>Streamlit</li>
+            <li>pytest</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="processo" aria-labelledby="titulo-processo">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">DO ARQUIVO À ANÁLISE</p>
+          <h2 id="titulo-processo">O caminho dos dados.</h2>
+          <p>Etapas que organizam o trabalho, da leitura dos arquivos à apresentação dos resultados.</p>
+        </div>
+        <div class="pipeline-grid">
+          <article class="pipeline-step">
+            <span class="step-number" aria-hidden="true">01</span>
+            <h3>Extração</h3>
+            <p>Leitura dos arquivos CSV disponibilizados na fonte de dados indicada pelo desafio.</p>
+          </article>
+          <article class="pipeline-step">
+            <span class="step-number" aria-hidden="true">02</span>
+            <h3>Transformação</h3>
+            <p>Padronização de colunas, conversão de datas e limpeza dos textos, com testes das regras.</p>
+          </article>
+          <article class="pipeline-step">
+            <span class="step-number" aria-hidden="true">03</span>
+            <h3>Armazenamento</h3>
+            <p>Persistência dos dados tratados em tabelas mensais no PostgreSQL.</p>
+          </article>
+          <article class="pipeline-step">
+            <span class="step-number" aria-hidden="true">04</span>
+            <h3>Exploração</h3>
+            <p>Desenvolvimento de consultas SQL e de um painel interativo em Streamlit.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="analises" aria-labelledby="titulo-analises">
+      <div class="container analysis-layout">
+        <div class="section-intro">
+          <p class="eyebrow">CONSULTAS ANALÍTICAS</p>
+          <h2 id="titulo-analises">As perguntas que orientam a análise.</h2>
+          <p>Cinco consultas previstas para transformar os registros em indicadores e visualizações.</p>
+        </div>
+        <ol class="analysis-list">
+          <li><span class="analysis-number" aria-hidden="true">01</span><div><h3>Demanda total</h3><p>Qual é a soma da demanda no período analisado?</p></div></li>
+          <li><span class="analysis-number" aria-hidden="true">02</span><div><h3>Quantidade de linhas</h3><p>Quantas linhas distintas estão presentes nos registros?</p></div></li>
+          <li><span class="analysis-number" aria-hidden="true">03</span><div><h3>Média diária de demanda</h3><p>Qual é a demanda média considerando os dias observados?</p></div></li>
+          <li><span class="analysis-number" aria-hidden="true">04</span><div><h3>Evolução por dia</h3><p>Como a movimentação varia ao longo do período?</p></div></li>
+          <li><span class="analysis-number" aria-hidden="true">05</span><div><h3>Ranking de linhas</h3><p>Quais linhas concentram os maiores volumes de demanda?</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section access-section" id="acessar" aria-labelledby="titulo-acessar">
+      <div class="container access-panel">
+        <div>
+          <p class="eyebrow">ACOMPANHE O PROJETO</p>
+          <h2 id="titulo-acessar">Do código aos resultados.</h2>
+          <p>Explore a apresentação no Streamlit local. Os links públicos do painel e do repositório serão adicionados após a publicação.</p>
+        </div>
+        <div class="access-actions">
+          <!-- Substituir pelo endereço público do Streamlit quando estiver disponível. -->
+          <a class="button button-primary" href="http://127.0.0.1:8501" target="_blank" rel="noopener noreferrer">Abrir Streamlit local <span aria-hidden="true">↗</span></a>
+          <!-- Para ativar: adicionar href com a URL do GitHub e remover is-disabled e aria-disabled. -->
+          <a class="button button-outline is-disabled" role="link" aria-disabled="true">Repositório em breve <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p><strong>Mobilidade em Dados</strong><br>Projeto desenvolvido para teste técnico.</p>
+      <p>Identidade visual inspirada na <a href="https://ottrans.com.br/" target="_blank" rel="noopener noreferrer">OT Trans</a>.<br>Dados: <a href="https://dados.gov.br/dados/conjuntos-dados/demanda" target="_blank" rel="noopener noreferrer">Portal Brasileiro de Dados Abertos</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>

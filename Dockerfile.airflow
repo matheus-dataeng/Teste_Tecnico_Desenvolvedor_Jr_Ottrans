@@ -1,0 +1,24 @@
+ARG AIRFLOW_VERSION=3.3.2
+FROM apache/airflow:${AIRFLOW_VERSION}-python3.12
+
+ARG AIRFLOW_VERSION
+
+WORKDIR /app
+
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1
+
+COPY --chown=airflow:root docker/requirements.common.txt docker/requirements.airflow.txt /tmp/requirements/
+RUN pip install --no-cache-dir \
+    "apache-airflow[postgres]==${AIRFLOW_VERSION}" \
+    -r /tmp/requirements/requirements.airflow.txt \
+    --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-3.12.txt"
+
+COPY --chown=airflow:root src /app/src
+COPY --chown=airflow:root tests /app/tests
+COPY --chown=airflow:root pytest.ini /app/pytest.ini
+COPY --chown=airflow:root dags_airflow /opt/airflow/dags
+
+EXPOSE 8080
+
+CMD ["standalone"]
