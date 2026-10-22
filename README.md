@@ -1,12 +1,14 @@
 # Teste Técnico Ottrans — Análise de Demanda de Passageiros
 
-Projeto de ETL e análise de dados públicos de demanda do transporte coletivo. Os dados de janeiro e fevereiro de 2022 são processados com Python e pandas, armazenados no PostgreSQL e apresentados em um dashboard Streamlit. O Airflow organiza a execução do pipeline, e o Docker Compose reúne o ambiente local.
+Este repositório tem como objetivo apresentar a implementação do teste técnico para Analista de Sistemas Júnior da OT Trans. A entrega contempla um fluxo de ETL e análises sobre a demanda de passageiros do transporte coletivo, utilizando os dados de janeiro e fevereiro de 2022.
+
+Os dados são processados com Python e pandas, armazenados no PostgreSQL e apresentados em um dashboard Streamlit. O Airflow organiza a execução do pipeline, e o Docker Compose reúne o ambiente local.
 
 As seis análises apresentam demanda total, quantidade de linhas, média diária, evolução temporal, ranking das linhas com maior demanda e demanda de estudantes. O banco PostgreSQL já está hospedado no Neon, com os dois meses carregados.
 
 | Acesso | Endereço ou situação |
 | --- | --- |
-| Apresentação do projeto | [Landing page no GitHub Pages](https://matheus-dataeng.github.io/Teste_Tecnico_Desenvolvedor_Jr_Ottrans/) |
+| Apresentação do teste técnico | [Landing page no GitHub Pages](https://matheus-dataeng.github.io/Teste_Tecnico_Desenvolvedor_Jr_Ottrans/) |
 | Dashboard local | <http://127.0.0.1:8501> |
 | Airflow local | <http://127.0.0.1:8080> |
 | Dashboard público | [Abrir dashboard no Streamlit](https://testetecnicodesenvolvedorjrottrans-ayckexyhjqnut4hwzaepar.streamlit.app/) |
@@ -80,7 +82,7 @@ As dependências de cada imagem ficam em `docker/requirements.*.txt`. O Airflow 
 
 O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execução por Docker instala as dependências de cada serviço automaticamente; não exige instalar o Airflow no Windows.
 
-## Organização do projeto
+## Estrutura do repositório
 
 ```text
 .
@@ -253,7 +255,7 @@ Os logs de cada tarefa também ficam disponíveis na interface do Airflow. `stop
 
 ## Dashboard
 
-- **Home:** apresenta o projeto, o período e a fonte dos dados. A fotografia ilustrativa da frota OT Trans possui o crédito de origem na página.
+- **Home:** apresenta o teste técnico, o período e a fonte dos dados. A fotografia ilustrativa da frota OT Trans possui o crédito de origem na página.
 - **Análise da demanda:** oferece filtro de janeiro, fevereiro ou ambos, três indicadores e dois gráficos.
 - **Dados detalhados:** apresenta os seis campos dos registros, filtros de mês e código da linha, contagem de registros e datas no formato `DD/MM/AAAA`.
 
@@ -311,13 +313,13 @@ O serviço de testes utiliza os dados sintéticos definidos no arquivo e pode se
 - **Airflow com execução manual:** permite acompanhar a sequência e os logs das tarefas durante o desenvolvimento.
 - **Streamlit com acesso direto ao banco:** simplifica a apresentação dos dados para este único consumidor.
 
-## Limitações do projeto
+## Limitações da implementação
 
 - **Recorte temporal:** a implementação contempla janeiro e fevereiro de 2022. Novos períodos exigem a inclusão dos arquivos, tabelas e consultas correspondentes.
 - **Processamento em memória:** os CSVs e os resultados detalhados são carregados integralmente. Os DataFrames também passam por XCom. Volumes maiores exigem rever a leitura em lotes e o transporte entre tarefas.
 - **Carga completa:** cada execução substitui os dados das tabelas mensais. O processo trabalha com a recarga integral dos arquivos.
 - **Conversões inválidas:** datas e códigos que não podem ser convertidos permanecem como valores ausentes, com avisos nos logs.
-- **Ambiente local:** o Airflow utiliza `standalone`, metadados SQLite e acionamento manual da DAG, conforme o escopo de desenvolvimento deste projeto.
+- **Ambiente local:** o Airflow utiliza `standalone`, metadados SQLite e acionamento manual da DAG, conforme o escopo deste teste técnico.
 
 ## Publicação
 
