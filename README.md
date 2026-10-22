@@ -43,8 +43,6 @@ extract → test_transform → transform → load
 
 Os DataFrames passam entre as tarefas por XCom. A conexão com o banco é criada na tarefa de carga e liberada ao final. Uma exceção na carga desfaz as operações da transação. A falha de uma tarefa interrompe as tarefas seguintes nessa sequência.
 
-A execução é manual (`schedule=None`), com `catchup=False`. O Airflow funciona em modo `standalone`: seus metadados ficam em SQLite no volume `airflow_data`. Na configuração local, os dados de negócio ficam no PostgreSQL, no volume `postgres_data`; na configuração remota, a carga é direcionada ao Neon.
-
 ### Estrutura do banco
 
 Cada arquivo mensal corresponde a uma tabela no schema `public`:
@@ -75,6 +73,7 @@ As páginas usam aliases SQL para receber nomes de colunas iguais nos resultados
 | Apache Airflow | Orquestração das tarefas |
 | Streamlit | Interface e visualizações |
 | pytest | Testes automatizados |
+| logging | Registro da execução, avisos e erros do pipeline |
 | Docker Compose | Execução dos serviços locais |
 
 As dependências de cada imagem ficam em `docker/requirements.*.txt`. O Airflow utiliza as constraints oficiais da sua versão. `logging`, `os` e `pathlib` fazem parte da biblioteca padrão do Python.
