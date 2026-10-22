@@ -9,7 +9,7 @@ As seis análises apresentam demanda total, quantidade de linhas, média diária
 | Apresentação do projeto | [Landing page no GitHub Pages](https://matheus-dataeng.github.io/Teste_Tecnico_Desenvolvedor_Jr_Ottrans/) |
 | Dashboard local | <http://127.0.0.1:8501> |
 | Airflow local | <http://127.0.0.1:8080> |
-| Dashboard público | URL a ser adicionada após a publicação. |
+| Dashboard público | [Abrir dashboard no Streamlit](https://testetecnicodesenvolvedorjrottrans-ayckexyhjqnut4hwzaepar.streamlit.app/) |
 | Banco remoto | PostgreSQL 16 no Neon, com as duas tabelas mensais carregadas. |
 | Repositório | [GitHub — Teste Técnico Ottrans](https://github.com/matheus-dataeng/Teste_Tecnico_Desenvolvedor_Jr_Ottrans) |
 
@@ -26,7 +26,7 @@ flowchart LR
 
 O ambiente local possui três serviços principais: PostgreSQL, Airflow e Streamlit. O serviço de testes é executado sob demanda.
 
-O Streamlit consulta o PostgreSQL diretamente. A entrada do ETL utiliza os CSVs da fonte oficial armazenados em `data/`, conforme as instruções de preparação dos arquivos. A implantação remota utiliza o Neon para armazenar os dados e prevê o Streamlit Community Cloud para o dashboard. A landing page é publicada no GitHub Pages.
+O Streamlit consulta o PostgreSQL diretamente. A entrada do ETL utiliza os CSVs da fonte oficial armazenados em `data/`, conforme as instruções de preparação dos arquivos. A implantação remota utiliza o Neon para armazenar os dados e o Streamlit Community Cloud para o dashboard. A landing page é publicada no GitHub Pages.
 
 ### Fluxo do ETL
 
@@ -340,18 +340,18 @@ Dispare a DAG pela interface para executar a carga. O serviço PostgreSQL local 
 
 A apresentação estática utiliza os arquivos de `landing_page/`. O workflow [.github/workflows/github-pages.yml](.github/workflows/github-pages.yml) publica essa pasta quando ela é alterada na branch `main`, ou quando o workflow é executado manualmente. HTML, CSS, imagem e fonte são servidos pelo GitHub Pages.
 
-O botão do Streamlit indica que a publicação do dashboard será adicionada em uma próxima atualização.
+Os botões de acesso ao dashboard abrem a aplicação publicada no Streamlit Community Cloud.
 
 ### Dashboard no Streamlit Community Cloud
 
-O destino previsto para o dashboard é o Streamlit Community Cloud. O banco remoto já está disponível; a URL pública será adicionada após a publicação da aplicação.
+O [dashboard público](https://testetecnicodesenvolvedorjrottrans-ayckexyhjqnut4hwzaepar.streamlit.app/) está publicado no Streamlit Community Cloud e conectado ao PostgreSQL do Neon. Foram conferidas as três páginas, os indicadores e os dois gráficos nos três períodos, além dos filtros de mês e código da linha nos dados detalhados. Os resultados foram comparados com os valores de referência do banco.
 
-Para publicar o dashboard:
+Para reproduzir a publicação do dashboard:
 
 1. Conferir as dependências utilizadas pelo dashboard no repositório publicado.
 2. Criar a aplicação no Community Cloud, selecionando o repositório, a branch `main` e `streamlit_app/Home.py` como arquivo de entrada, com Python 3.12.
 3. Nas configurações de Secrets, cadastrar a seção `[connections.postgresql]` com host, porta e credenciais reais do Neon e os parâmetros SSL. O host interno `postgres` serve apenas para o Compose local. O arquivo de segredos não deve ser enviado ao repositório.
-4. Testar o acesso público, as três páginas, os filtros e os totais. Inserir a URL definitiva no início deste README e nos links da landing page.
+4. Testar o acesso público, as três páginas, os filtros e os totais, comparando os resultados com os valores de referência deste README.
 
 Modelo para os Secrets do Community Cloud, substituindo os valores indicados:
 
