@@ -275,7 +275,7 @@ Os seis arquivos abaixo organizam as análises SQL, com consultas separadas para
 | Arquivo | Análise |
 | --- | --- |
 | [01_demanda_total.sql](consultas_analiticas/01_demanda_total.sql) | Demanda total por período |
-| [02_quantidade_linhas.sql](consultas_analiticas/02_quantidade_linhas.sql) | Quantidade de nomes de linha distintos |
+| [02_quantidade_linhas.sql](consultas_analiticas/02_quantidade_linhas.sql) | Quantidade de códigos de linha distintos |
 | [03_media_diaria_demanda.sql](consultas_analiticas/03_media_diaria_demanda.sql) | Média diária da demanda |
 | [04_demanda_por_dia.sql](consultas_analiticas/04_demanda_por_dia.sql) | Evolução temporal da demanda |
 | [05_ranking_linhas.sql](consultas_analiticas/05_ranking_linhas.sql) | Ranking de demanda por linha |
