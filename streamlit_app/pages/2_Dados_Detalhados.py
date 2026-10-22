@@ -6,7 +6,7 @@ st.set_page_config(page_title="Dados detalhados", page_icon="📋", layout="wide
 st.title("Dados detalhados")
 st.caption("Consulte os registros por mês e por código da linha.")
 
-mes = st.selectbox("Mês", ["Janeiro", "Fevereiro", "Ambos"])
+mes = st.selectbox("Mês", ["Janeiro", "Fevereiro", "Janeiro e Fevereiro"])
 
 conn = st.connection("postgresql", type="sql")
 

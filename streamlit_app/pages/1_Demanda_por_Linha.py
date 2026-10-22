@@ -6,7 +6,7 @@ st.set_page_config(page_title="Análise da demanda", page_icon="🚌", layout="w
 st.title("Análise da demanda")
 st.caption("Demanda de passageiros por linha · Janeiro e fevereiro de 2022")
 
-mes = st.selectbox("Mês", ["Janeiro", "Fevereiro", "Ambos"])
+mes = st.selectbox("Mês", ["Janeiro", "Fevereiro", "Janeiro e Fevereiro"])
 
 conn = st.connection("postgresql", type="sql")
 
