@@ -116,13 +116,13 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execuç�
 
 ## Fonte e qualidade dos dados
 
-A fonte indicada no desafio é o conjunto [Demanda, no Portal Brasileiro de Dados Abertos](https://dados.gov.br/dados/conjuntos-dados/demanda). Os recursos originais são publicados pela ETUFOR no [Fortaleza Dados Abertos](https://dados.fortaleza.ce.gov.br/dataset/demanda). O recorte utilizado contém os arquivos de janeiro e fevereiro de 2022.
+A fonte indicada no teste é o conjunto [Demanda, no Portal Brasileiro de Dados Abertos](https://dados.gov.br/dados/conjuntos-dados/demanda). Os recursos originais são publicados pela ETUFOR no [Fortaleza Dados Abertos](https://dados.fortaleza.ce.gov.br/dataset/demanda). O recorte utilizado contém os arquivos de janeiro e fevereiro de 2022.
 
 Na implementação atual, os arquivos são baixados manualmente e colocados em `data/`. A extração usa separador `;` e codificação UTF-8.
 
 ### Problemas encontrados, tratamentos e impactos
 
-A conferência dos dois arquivos locais identificou os seguintes problemas reais:
+A conferência dos dois arquivos identificou os seguintes problemas reais:
 
 | Problema | Evidência na base | Tratamento implementado | Impacto |
 | --- | --- | --- | --- |
