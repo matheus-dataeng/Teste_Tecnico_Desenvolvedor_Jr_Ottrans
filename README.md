@@ -84,14 +84,12 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execuç�
 
 ```text
 .
-├── .github/workflows/
-│   └── github-pages.yml          # Publicação da landing page
 ├── consultas_analiticas/          # Consultas SQL dos indicadores
 ├── dags_airflow/
 │   └── dags.py                   # DAG do pipeline
 ├── data/                         # CSVs locais, ignorados pelo Git
 ├── docker/                       # Dependências por serviço
-├── landing_page/                 # Apresentação estática em HTML e CSS
+├── docs/                         # Landing page publicada no GitHub Pages
 ├── src/
 │   ├── extract.py
 │   ├── transform.py
@@ -337,7 +335,7 @@ Dispare a DAG pela interface para executar a carga. O serviço PostgreSQL local 
 
 ### Landing page no GitHub Pages
 
-A apresentação estática utiliza os arquivos de `landing_page/`. O workflow [.github/workflows/github-pages.yml](.github/workflows/github-pages.yml) publica essa pasta quando ela é alterada na branch `main`, ou quando o workflow é executado manualmente. HTML, CSS, imagem e fonte são servidos pelo GitHub Pages.
+A apresentação estática utiliza os arquivos de `docs/`. No repositório, em **Settings → Pages**, a publicação está configurada como **Deploy from a branch**, usando a branch `main` e a pasta `/docs`. Ao enviar alterações nessa pasta para o GitHub, a página é atualizada pelo próprio Pages.
 
 Os botões de acesso ao dashboard abrem a aplicação publicada no Streamlit Community Cloud.
 
