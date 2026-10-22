@@ -17,7 +17,7 @@ As seis análises apresentam demanda total, quantidade de linhas, média diária
 
 ```mermaid
 flowchart LR
-    A["Fonte pública"] -->|Download manual| B["CSVs de janeiro e fevereiro"]
+    A["Fonte pública"] -->|Obtenção dos arquivos| B["CSVs de janeiro e fevereiro"]
     B --> C["Airflow: extração, testes, transformação e carga"]
     C --> D[(PostgreSQL local ou Neon)]
     D -->|Consultas SQL| E[Streamlit]
