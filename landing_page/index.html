@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#15ab68">
-  <meta name="description" content="Apresentação do projeto de análise de demanda no transporte público, desenvolvido para o teste técnico de Analista de Sistemas Júnior.">
-  <title>Mobilidade em Dados | Teste técnico</title>
+  <meta name="description" content="Teste técnico para Analista de Sistemas Júnior na OT Trans: ETL em Python, armazenamento em PostgreSQL, consultas SQL e dashboard em Streamlit.">
+  <title>Teste técnico | Analista de Sistemas Júnior · OT Trans</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,15 +13,15 @@
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#inicio" aria-label="Mobilidade em Dados — início">
-        <span class="brand-mark" aria-hidden="true">MD</span>
+      <a class="brand" href="#inicio" aria-label="Teste técnico OT Trans — início">
+        <span class="brand-mark" aria-hidden="true">TT</span>
         <span class="brand-copy">
-          <strong>Mobilidade em Dados</strong>
-          <small>Teste técnico · OT Trans</small>
+          <strong>Teste técnico</strong>
+          <small>OT Trans · Sistemas Júnior</small>
         </span>
       </a>
       <nav class="nav-links" aria-label="Navegação principal">
-        <a href="#projeto">O projeto</a>
+        <a href="#teste">Sobre o teste</a>
         <a href="#processo">Fluxo dos dados</a>
         <a href="#acessar">Veja o que foi desenvolvido <span aria-hidden="true">↗</span></a>
       </nav>
@@ -32,25 +32,26 @@
     <section class="hero" id="inicio" aria-labelledby="titulo-principal">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ANALISTA DE SISTEMAS JÚNIOR - ETL</p>
-          <h1 id="titulo-principal">Uma nova leitura para a <span class="accent">demanda do transporte.</span></h1>
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ANALISTA DE SISTEMAS JÚNIOR · OT TRANS</p>
+          <h1 id="titulo-principal">Teste técnico: <span class="accent">ETL e análise de dados.</span></h1>
           <p class="hero-description">
-            Dados abertos, tratamento em Python e análises para compreender a
-            movimentação de passageiros. Um projeto que conecta a preparação
-            dos registros à exploração dos resultados.
+            Solução desenvolvida para o teste técnico de Analista de Sistemas
+            Júnior da OT Trans. A entrega reúne tratamento de dados em Python,
+            armazenamento em PostgreSQL, consultas SQL e apresentação dos
+            resultados em um dashboard Streamlit.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="https://testetecnicodesenvolvedorjrottrans-ayckexyhjqnut4hwzaepar.streamlit.app/" target="_blank" rel="noopener noreferrer">
               Acessar dashboard <span aria-hidden="true">↗</span>
             </a>
-            <a class="button button-outline" href="#projeto">Veja mais <span aria-hidden="true">↓</span></a>
+            <a class="button button-outline" href="#teste">Conhecer o teste <span aria-hidden="true">↓</span></a>
           </div>
           <p class="hero-note">Base carregada no Neon · Janeiro e fevereiro de 2022</p>
         </div>
 
         <figure class="hero-visual">
           <img src="assets/onibus_integra_ottrans.jpg" alt="Ônibus verdes da frota OT Trans, integrante do sistema Integra, alinhados em Salvador." width="1024" height="388" fetchpriority="high">
-          <span class="image-tag">Mobilidade como ponto de partida.</span>
+          <span class="image-tag">Teste técnico · Dados de transporte</span>
           <figcaption>
             Imagem ilustrativa da frota em Salvador (BA).
             <a href="https://ottrans.com.br/nova-frota-de-onibus-da-ot-trans-amplia-renovacao-do-transporte-publico-de-salvador/" target="_blank" rel="noopener noreferrer">Foto: OT Trans</a>
@@ -59,7 +60,7 @@
       </div>
     </section>
 
-    <section class="project-facts" aria-label="Recorte e estrutura do projeto">
+    <section class="project-facts" aria-label="Recorte e entregas do teste técnico">
       <div class="container facts-grid">
         <div class="fact">
           <span class="fact-number">02</span>
@@ -76,29 +77,30 @@
       </div>
     </section>
 
-    <section class="section" id="projeto" aria-labelledby="titulo-projeto">
+    <section class="section" id="teste" aria-labelledby="titulo-teste">
       <div class="container story-grid">
         <div class="section-intro">
-          <p class="eyebrow">O PROJETO</p>
-          <h2 id="titulo-projeto">Uma base organizada.<br>Uma análise com contexto.</h2>
+          <p class="eyebrow">SOBRE O TESTE TÉCNICO</p>
+          <h2 id="titulo-teste">Da preparação dos dados<br>à apresentação dos resultados.</h2>
         </div>
         <div class="story-content">
           <p>
-            Os registros de transporte ajudam a entender como a demanda se
-            distribui entre dias, linhas e categorias de passageiros. Para
-            explorar essas informações, o primeiro passo é preparar os dados.
+            O desafio consiste em extrair, tratar e armazenar dados públicos
+            de demanda de passageiros, elaborar consultas SQL e disponibilizar
+            os resultados em um dashboard. O recorte utilizado abrange janeiro
+            e fevereiro de 2022.
           </p>
           <p>
-            Neste teste técnico, os arquivos de janeiro e fevereiro de 2022
-            foram tratados e carregados em tabelas mensais no PostgreSQL,
-            hospedado no Neon. O Airflow organiza a execução do fluxo,
-            e os testes verificam as regras de transformação com exemplos conhecidos.
+            Os arquivos foram processados com Python e pandas e carregados em
+            duas tabelas mensais no PostgreSQL, hospedado no Neon. O Airflow
+            organiza a execução do ETL, o Docker prepara o ambiente e os testes
+            automatizados verificam as regras de transformação com exemplos conhecidos.
           </p>
           <p>
-            As seis análises SQL e o dashboard em Streamlit estão implementados,
-            com indicadores, gráficos e filtros para explorar os registros.
-            O painel está publicado no Streamlit Community Cloud.
-            As escolhas técnicas e limitações estão documentadas no repositório.
+            A entrega inclui o código-fonte, seis análises SQL, testes
+            automatizados e um dashboard em Streamlit, publicado no Community
+            Cloud. O README apresenta a arquitetura, as instruções de execução,
+            as decisões técnicas e as limitações da implementação.
           </p>
           <ul class="tech-list" aria-label="Tecnologias utilizadas">
             <li>Python</li>
@@ -117,9 +119,9 @@
     <section class="section section-soft" id="processo" aria-labelledby="titulo-processo">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">DO ARQUIVO À ANÁLISE</p>
-          <h2 id="titulo-processo">O caminho dos dados.</h2>
-          <p>Etapas que organizam o trabalho, da leitura dos arquivos à apresentação dos resultados.</p>
+          <p class="eyebrow">ETAPAS DO TESTE</p>
+          <h2 id="titulo-processo">Como os dados foram processados.</h2>
+          <p>Da leitura dos arquivos CSV à consulta dos resultados no dashboard.</p>
         </div>
         <div class="pipeline-grid">
           <article class="pipeline-step">
@@ -150,7 +152,7 @@
       <div class="container analysis-layout">
         <div class="section-intro">
           <p class="eyebrow">CONSULTAS ANALÍTICAS</p>
-          <h2 id="titulo-analises">As perguntas que orientam a análise.</h2>
+          <h2 id="titulo-analises">Análises desenvolvidas no teste.</h2>
           <p>Seis análises SQL implementadas para explorar os registros de janeiro e fevereiro de 2022.</p>
         </div>
         <ol class="analysis-list">
@@ -167,9 +169,9 @@
     <section class="section access-section" id="acessar" aria-labelledby="titulo-acessar">
       <div class="container access-panel">
         <div>
-          <p class="eyebrow">ACOMPANHE O PROJETO</p>
-          <h2 id="titulo-acessar">Do código aos resultados.</h2>
-          <p>Consulte o código no GitHub e explore o dashboard publicado no Streamlit. A base está carregada no PostgreSQL hospedado no Neon.</p>
+          <p class="eyebrow">ACESSO À ENTREGA</p>
+          <h2 id="titulo-acessar">Consulte o código e o dashboard.</h2>
+          <p>O repositório reúne a implementação, as consultas SQL e as instruções de execução. O dashboard apresenta os resultados com indicadores, gráficos e filtros.</p>
         </div>
         <div class="access-actions">
           <a class="button button-primary" href="https://testetecnicodesenvolvedorjrottrans-ayckexyhjqnut4hwzaepar.streamlit.app/" target="_blank" rel="noopener noreferrer">Acessar dashboard <span aria-hidden="true">↗</span></a>
@@ -181,7 +183,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p><strong>Mobilidade em Dados</strong><br>Projeto desenvolvido para teste técnico.</p>
+      <p><strong>Teste técnico · OT Trans</strong><br>Analista de Sistemas Júnior · ETL, Python e SQL.</p>
       <p>Identidade visual inspirada na <a href="https://ottrans.com.br/" target="_blank" rel="noopener noreferrer">OT Trans</a>.<br>Dados: <a href="https://dados.gov.br/dados/conjuntos-dados/demanda" target="_blank" rel="noopener noreferrer">Portal Brasileiro de Dados Abertos</a>.</p>
     </div>
   </footer>
