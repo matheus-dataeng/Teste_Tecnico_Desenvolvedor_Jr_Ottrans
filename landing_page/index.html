@@ -40,13 +40,13 @@
             dos registros à exploração dos resultados.
           </p>
           <div class="hero-actions">
-            <!-- Substituir pelo endereço público do Streamlit quando o painel for publicado. -->
-            <a class="button button-primary" href="http://127.0.0.1:8501" target="_blank" rel="noopener noreferrer">
-              Abrir Streamlit local <span aria-hidden="true">↗</span>
-            </a>
+            <!-- Substituir pelo link público do Streamlit após a publicação do painel. -->
+            <button class="button button-primary is-disabled" type="button" disabled aria-disabled="true">
+              Streamlit em breve
+            </button>
             <a class="button button-outline" href="#projeto">Conhecer o projeto <span aria-hidden="true">↓</span></a>
           </div>
-          <p class="hero-note">Projeto em desenvolvimento · Dados de janeiro e fevereiro de 2022</p>
+          <p class="hero-note">Base carregada no Neon · Janeiro e fevereiro de 2022</p>
         </div>
 
         <figure class="hero-visual">
@@ -71,8 +71,8 @@
           <span class="fact-label">testes automatizados<br><strong>Regras de transformação</strong></span>
         </div>
         <div class="fact">
-          <span class="fact-number">05</span>
-          <span class="fact-label">consultas SQL previstas<br><strong>Indicadores e comparações</strong></span>
+          <span class="fact-number">06</span>
+          <span class="fact-label">análises SQL implementadas<br><strong>Indicadores e comparações</strong></span>
         </div>
       </div>
     </section>
@@ -91,20 +91,21 @@
           </p>
           <p>
             Neste teste técnico, os arquivos de janeiro e fevereiro de 2022
-            passam por leitura, padronização e validação antes de serem
-            armazenados no PostgreSQL. O Airflow organiza a execução do fluxo,
+            foram tratados e carregados em tabelas mensais no PostgreSQL,
+            hospedado no Neon. O Airflow organiza a execução do fluxo,
             e os testes verificam as regras de transformação com exemplos conhecidos.
           </p>
           <p>
-            A etapa analítica está em desenvolvimento, com consultas SQL e uma
-            interface em Streamlit para acompanhar os resultados e explorar os
-            registros. As escolhas e limitações do trabalho serão documentadas
-            junto ao código.
+            As seis análises SQL e o dashboard em Streamlit estão implementados,
+            com indicadores, gráficos e filtros para explorar os registros.
+            O acesso público ao painel será disponibilizado em breve.
+            As escolhas técnicas e limitações estão documentadas no repositório.
           </p>
           <ul class="tech-list" aria-label="Tecnologias utilizadas">
             <li>Python</li>
             <li>pandas</li>
             <li>PostgreSQL</li>
+            <li>Neon</li>
             <li>Airflow</li>
             <li>Docker</li>
             <li>Streamlit</li>
@@ -135,12 +136,12 @@
           <article class="pipeline-step">
             <span class="step-number" aria-hidden="true">03</span>
             <h3>Armazenamento</h3>
-            <p>Persistência dos dados tratados em tabelas mensais no PostgreSQL.</p>
+            <p>Dados tratados carregados em duas tabelas mensais no PostgreSQL hospedado no Neon.</p>
           </article>
           <article class="pipeline-step">
             <span class="step-number" aria-hidden="true">04</span>
             <h3>Exploração</h3>
-            <p>Desenvolvimento de consultas SQL e de um painel interativo em Streamlit.</p>
+            <p>Seis análises SQL e dashboard Streamlit implementados, com indicadores, gráficos e filtros.</p>
           </article>
         </div>
       </div>
@@ -151,7 +152,7 @@
         <div class="section-intro">
           <p class="eyebrow">CONSULTAS ANALÍTICAS</p>
           <h2 id="titulo-analises">As perguntas que orientam a análise.</h2>
-          <p>Cinco consultas previstas para transformar os registros em indicadores e visualizações.</p>
+          <p>Seis análises SQL implementadas para explorar os registros de janeiro e fevereiro de 2022.</p>
         </div>
         <ol class="analysis-list">
           <li><span class="analysis-number" aria-hidden="true">01</span><div><h3>Demanda total</h3><p>Qual é a soma da demanda no período analisado?</p></div></li>
@@ -159,6 +160,7 @@
           <li><span class="analysis-number" aria-hidden="true">03</span><div><h3>Média diária de demanda</h3><p>Qual é a demanda média considerando os dias observados?</p></div></li>
           <li><span class="analysis-number" aria-hidden="true">04</span><div><h3>Evolução por dia</h3><p>Como a movimentação varia ao longo do período?</p></div></li>
           <li><span class="analysis-number" aria-hidden="true">05</span><div><h3>Ranking de linhas</h3><p>Quais linhas concentram os maiores volumes de demanda?</p></div></li>
+          <li><span class="analysis-number" aria-hidden="true">06</span><div><h3>Demanda de estudantes</h3><p>Qual é a demanda da categoria de estudantes, identificada pelo código 3, em cada mês?</p></div></li>
         </ol>
       </div>
     </section>
@@ -168,11 +170,11 @@
         <div>
           <p class="eyebrow">ACOMPANHE O PROJETO</p>
           <h2 id="titulo-acessar">Do código aos resultados.</h2>
-          <p>Consulte o código no GitHub e explore a apresentação no Streamlit local. O link público do painel será adicionado após a publicação.</p>
+          <p>Consulte o código no GitHub. A base está carregada no Neon e o dashboard Streamlit está implementado; seu link público será disponibilizado em breve.</p>
         </div>
         <div class="access-actions">
-          <!-- Substituir pelo endereço público do Streamlit quando estiver disponível. -->
-          <a class="button button-primary" href="http://127.0.0.1:8501" target="_blank" rel="noopener noreferrer">Abrir Streamlit local <span aria-hidden="true">↗</span></a>
+          <!-- Substituir pelo link público do Streamlit após a publicação do painel. -->
+          <button class="button button-primary is-disabled" type="button" disabled aria-disabled="true">Streamlit em breve</button>
           <a class="button button-outline" href="https://github.com/matheus-dataeng/Teste_Tecnico_Desenvolvedor_Jr_Ottrans" target="_blank" rel="noopener noreferrer">Ver repositório <span aria-hidden="true">↗</span></a>
         </div>
       </div>

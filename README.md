@@ -2,13 +2,15 @@
 
 Projeto de ETL e análise de dados públicos de demanda do transporte coletivo. Os dados de janeiro e fevereiro de 2022 são processados com Python e pandas, armazenados no PostgreSQL e apresentados em um dashboard Streamlit. O Airflow organiza a execução do pipeline, e o Docker Compose reúne o ambiente local.
 
-As análises apresentam demanda total, quantidade de linhas, média diária, evolução temporal e ranking das linhas com maior demanda.
+As seis análises apresentam demanda total, quantidade de linhas, média diária, evolução temporal, ranking das linhas com maior demanda e demanda de estudantes. O banco PostgreSQL já está hospedado no Neon, com os dois meses carregados.
 
 | Acesso | Endereço ou situação |
 | --- | --- |
+| Apresentação do projeto | [Landing page no GitHub Pages](https://matheus-dataeng.github.io/Teste_Tecnico_Desenvolvedor_Jr_Ottrans/) |
 | Dashboard local | <http://127.0.0.1:8501> |
 | Airflow local | <http://127.0.0.1:8080> |
 | Dashboard público | URL a ser adicionada após a publicação. |
+| Banco remoto | PostgreSQL 16 no Neon, com as duas tabelas mensais carregadas. |
 | Repositório | [GitHub — Teste Técnico Ottrans](https://github.com/matheus-dataeng/Teste_Tecnico_Desenvolvedor_Jr_Ottrans) |
 
 ## Arquitetura
@@ -17,14 +19,14 @@ As análises apresentam demanda total, quantidade de linhas, média diária, evo
 flowchart LR
     A["Fonte pública"] -->|Download manual| B["CSVs de janeiro e fevereiro"]
     B --> C["Airflow: extração, testes, transformação e carga"]
-    C --> D[(PostgreSQL)]
+    C --> D[(PostgreSQL local ou Neon)]
     D -->|Consultas SQL| E[Streamlit]
     E --> F["Indicadores, gráficos e dados detalhados"]
 ```
 
 O ambiente local possui três serviços principais: PostgreSQL, Airflow e Streamlit. O serviço de testes é executado sob demanda.
 
-O Streamlit consulta o PostgreSQL diretamente. A entrada do ETL utiliza os CSVs da fonte oficial armazenados em `data/`, conforme as instruções de preparação dos arquivos.
+O Streamlit consulta o PostgreSQL diretamente. A entrada do ETL utiliza os CSVs da fonte oficial armazenados em `data/`, conforme as instruções de preparação dos arquivos. A implantação remota utiliza o Neon para armazenar os dados e prevê o Streamlit Community Cloud para o dashboard. A landing page é publicada no GitHub Pages.
 
 ### Fluxo do ETL
 
@@ -41,7 +43,7 @@ extract → test_transform → transform → load
 
 Os DataFrames passam entre as tarefas por XCom. A conexão com o banco é criada na tarefa de carga e liberada ao final. Uma exceção na carga desfaz as operações da transação. A falha de uma tarefa interrompe as tarefas seguintes nessa sequência.
 
-A execução é manual (`schedule=None`), com `catchup=False`. O Airflow funciona em modo `standalone`: seus metadados ficam em SQLite no volume `airflow_data`; os dados de negócio ficam no PostgreSQL, no volume `postgres_data`.
+A execução é manual (`schedule=None`), com `catchup=False`. O Airflow funciona em modo `standalone`: seus metadados ficam em SQLite no volume `airflow_data`. Na configuração local, os dados de negócio ficam no PostgreSQL, no volume `postgres_data`; na configuração remota, a carga é direcionada ao Neon.
 
 ### Estrutura do banco
 
@@ -83,6 +85,8 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execuç�
 
 ```text
 .
+├── .github/workflows/
+│   └── github-pages.yml          # Publicação da landing page
 ├── consultas_analiticas/          # Consultas SQL dos indicadores
 ├── dags_airflow/
 │   └── dags.py                   # DAG do pipeline
@@ -93,7 +97,6 @@ O `requirements.txt` da raiz reúne dependências de desenvolvimento. A execuç�
 │   ├── extract.py
 │   ├── transform.py
 │   ├── load.py
-│   ├── main.py
 │   └── utils/log_config.py
 ├── streamlit_app/
 │   ├── Home.py
@@ -173,15 +176,16 @@ Crie `.env.docker` na raiz com a configuração abaixo. A senha é um exemplo pa
 POSTGRES_DB=ottrans
 POSTGRES_USER=ottrans
 POSTGRES_PASSWORD=defina_uma_senha_local
-POSTGRES_HOST=127.0.0.1
-POSTGRES_PORT=5433
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_HOST_PORT=5433
 AIRFLOW_PORT=8080
 STREAMLIT_PORT=8501
 ARQUIVO_JANEIRO_2022=/app/data/demanda_202201.csv
 ARQUIVO_FEVEREIRO_2022=/app/data/demanda_202202.csv
 ```
 
-O Compose lê esse arquivo por meio de `--env-file .env.docker`. Seu bloco `environment` disponibiliza as configurações ao código dentro dos containers. Para a comunicação interna, ele fixa `POSTGRES_HOST=postgres`, `POSTGRES_PORT=5432` e os caminhos em `/app/data/`.
+Os serviços leem as variáveis do arquivo por meio de `env_file: .env.docker`. O argumento `--env-file .env.docker` também permite ao Compose usar os valores na configuração das portas publicadas. Na execução local, use `POSTGRES_HOST=postgres`, nome do serviço na rede interna, e `POSTGRES_PORT=5432`. `POSTGRES_HOST_PORT=5433` é a porta publicada para ferramentas no Windows. Os caminhos dos CSVs ficam em `/app/data/`.
 
 | Origem da conexão | Host | Porta padrão |
 | --- | --- | --- |
@@ -266,17 +270,18 @@ Os logs de cada tarefa também ficam disponíveis na interface do Airflow. `stop
 
 ## Consultas SQL analíticas
 
-Os cinco arquivos abaixo organizam as análises SQL, com consultas separadas para janeiro e fevereiro.
+Os seis arquivos abaixo organizam as análises SQL, com consultas separadas para janeiro e fevereiro. As consultas utilizam agregações, agrupamentos, ordenação temporal e filtro por tipo de passageiro.
 
 | Arquivo | Análise |
 | --- | --- |
 | [01_demanda_total.sql](consultas_analiticas/01_demanda_total.sql) | Demanda total por período |
-| [02_quantidade_linhas.sql](consultas_analiticas/02_quantidade_linhas.sql) | Quantidade de linhas distintas |
+| [02_quantidade_linhas.sql](consultas_analiticas/02_quantidade_linhas.sql) | Quantidade de nomes de linha distintos |
 | [03_media_diaria_demanda.sql](consultas_analiticas/03_media_diaria_demanda.sql) | Média diária da demanda |
 | [04_demanda_por_dia.sql](consultas_analiticas/04_demanda_por_dia.sql) | Evolução temporal da demanda |
 | [05_ranking_linhas.sql](consultas_analiticas/05_ranking_linhas.sql) | Ranking de demanda por linha |
+| [06_demanda_por_categoria_linha.sql](consultas_analiticas/06_demanda_por_categoria_linha.sql) | Demanda de estudantes, com filtro pelo tipo de passageiro 3 |
 
-Execute os arquivos em um editor SQL conectado ao banco configurado no `.env.docker`, usando `127.0.0.1:5433` no computador local. Os valores de referência e os indicadores do dashboard permitem conferir os resultados.
+Execute os arquivos em um editor SQL conectado ao banco de destino. Para o PostgreSQL local, use `127.0.0.1:5433`; para o Neon, use o host remoto, a porta `5432` e a conexão SSL fornecida pelo serviço. Os valores de referência e os indicadores do dashboard permitem conferir os resultados.
 
 ## Testes automatizados
 
@@ -301,6 +306,7 @@ O serviço de testes utiliza os dados sintéticos definidos no arquivo e pode se
 
 - **pandas para os dois arquivos:** os CSVs somam aproximadamente 13 MB, permitindo uma implementação simples em memória para este recorte.
 - **PostgreSQL:** oferece persistência, transações e consultas relacionais para os indicadores, além de permitir compartilhar a base com o dashboard.
+- **Neon:** disponibiliza o PostgreSQL remoto para que o dashboard publicado possa consultar os dados sem depender do computador de desenvolvimento.
 - **Uma tabela por mês:** mantém a correspondência entre arquivo de origem e tabela, facilitando a identificação do período de cada conjunto de registros.
 - **Substituição completa na carga:** reaplicar os mesmos arquivos substitui o conteúdo anterior, evitando acumular registros de execuções passadas. A abordagem atende ao recorte fixo; não implementa carga incremental.
 - **Funções separadas por etapa:** extração, transformação e carga podem ser compreendidas e revisadas individualmente.
@@ -316,17 +322,53 @@ O serviço de testes utiliza os dados sintéticos definidos no arquivo e pode se
 - **Conversões inválidas:** datas e códigos que não podem ser convertidos permanecem como valores ausentes, com avisos nos logs.
 - **Ambiente local:** o Airflow utiliza `standalone`, metadados SQLite e acionamento manual da DAG, conforme o escopo de desenvolvimento deste projeto.
 
-## Publicação planejada
+## Publicação
 
-O destino previsto para o dashboard é o Streamlit Community Cloud. O banco deverá estar disponível para esse ambiente, com as duas tabelas carregadas. O Compose atual mantém o PostgreSQL local e fixa o host `postgres` nos serviços: mudar apenas `POSTGRES_HOST` no `.env.docker` não redireciona o ETL do Compose para um banco remoto.
+### Banco de dados no Neon
+
+O PostgreSQL 16 está hospedado no Neon, com as tabelas `public.demanda_janeiro_2022` e `public.demanda_fevereiro_2022`. A carga foi conferida com os totais de referência: 86.034 registros de janeiro e 80.548 de fevereiro, preservando as colunas de data como `DATE`.
+
+Para direcionar o ETL ao Neon, configure no `.env.docker` o host, banco, usuário e senha fornecidos pelo serviço. Use `POSTGRES_PORT=5432`, `PGSSLMODE=require` e `PGCHANNELBINDING=require`. Depois aplique as variáveis somente ao Airflow:
+
+```powershell
+docker compose --env-file .env.docker up -d --no-deps --force-recreate airflow
+```
+
+Dispare a DAG pela interface para executar a carga. O serviço PostgreSQL local usa os mesmos nomes de variáveis na inicialização; configure-o com suas credenciais locais ao iniciar esse ambiente.
+
+### Landing page no GitHub Pages
+
+A apresentação estática utiliza os arquivos de `landing_page/`. O workflow [.github/workflows/github-pages.yml](.github/workflows/github-pages.yml) publica essa pasta quando ela é alterada na branch `main`, ou quando o workflow é executado manualmente. HTML, CSS, imagem e fonte são servidos pelo GitHub Pages.
+
+O botão do Streamlit indica que a publicação do dashboard será adicionada em uma próxima atualização.
+
+### Dashboard no Streamlit Community Cloud
+
+O destino previsto para o dashboard é o Streamlit Community Cloud. O banco remoto já está disponível; a URL pública será adicionada após a publicação da aplicação.
 
 Para publicar o dashboard:
 
-1. Disponibilizar o PostgreSQL remoto e carregar as tabelas tratadas.
-2. Conferir as dependências utilizadas pelo dashboard no repositório publicado.
-3. Criar a aplicação no Community Cloud, selecionando o repositório, a branch e `streamlit_app/Home.py` como arquivo de entrada, com Python 3.12.
-4. Nas configurações de Secrets, cadastrar a seção `[connections.postgresql]` com host, porta e credenciais reais do banco remoto. O host interno `postgres` serve apenas para o Compose local. O arquivo de segredos não deve ser enviado ao repositório.
-5. Testar o acesso público, as três páginas, os filtros e os totais. Inserir as URLs definitivas no início deste README e nos links da landing page.
+1. Conferir as dependências utilizadas pelo dashboard no repositório publicado.
+2. Criar a aplicação no Community Cloud, selecionando o repositório, a branch `main` e `streamlit_app/Home.py` como arquivo de entrada, com Python 3.12.
+3. Nas configurações de Secrets, cadastrar a seção `[connections.postgresql]` com host, porta e credenciais reais do Neon e os parâmetros SSL. O host interno `postgres` serve apenas para o Compose local. O arquivo de segredos não deve ser enviado ao repositório.
+4. Testar o acesso público, as três páginas, os filtros e os totais. Inserir a URL definitiva no início deste README e nos links da landing page.
+
+Modelo para os Secrets do Community Cloud, substituindo os valores indicados:
+
+```toml
+[connections.postgresql]
+dialect = "postgresql"
+driver = "psycopg"
+host = "SEU_HOST_DO_NEON"
+port = "5432"
+database = "neondb"
+username = "neondb_owner"
+password = "SUA_SENHA_DO_NEON"
+
+[connections.postgresql.query]
+sslmode = "require"
+channel_binding = "require"
+```
 
 O Community Cloud utiliza os arquivos de dependências do repositório; ele não inicia os serviços de `docker-compose.yml`. A orientação de configuração está na [documentação de deploy](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app), com detalhes sobre [dependências](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies) e [Secrets](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/secrets-management).
 

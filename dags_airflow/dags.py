@@ -31,7 +31,7 @@ def test_transform_pipeline():
     
 def transform_pipeline(ti):
     df_janeiro, df_fevereiro = ti.xcom_pull(task_ids="extract")
-    df_janeiro, df_fevereiro = transform(df_janeiro, df_fevereiro)
+    transform(df_janeiro, df_fevereiro)
  
     return  df_janeiro, df_fevereiro
     

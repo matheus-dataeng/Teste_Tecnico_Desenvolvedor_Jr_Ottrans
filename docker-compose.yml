@@ -2,11 +2,6 @@ name: ottrans_teste_tecnico
 
 x-project-environment: &project-environment
   PYTHONPATH: /app
-  POSTGRES_HOST: postgres
-  POSTGRES_PORT: "5432"
-  POSTGRES_DB: ${POSTGRES_DB:-ottrans}
-  POSTGRES_USER: ${POSTGRES_USER:-ottrans}
-  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env.docker}
   ARQUIVO_JANEIRO_2022: /app/data/demanda_202201.csv
   ARQUIVO_FEVEREIRO_2022: /app/data/demanda_202202.csv
 
@@ -14,12 +9,10 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-ottrans}
-      POSTGRES_USER: ${POSTGRES_USER:-ottrans}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env.docker}
+    env_file:
+      - .env.docker
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -34,6 +27,8 @@ services:
       context: .
       dockerfile: Dockerfile.airflow
     restart: unless-stopped
+    env_file:
+      - .env.docker
     environment:
       <<: *project-environment
       AIRFLOW_HOME: /opt/airflow
@@ -74,6 +69,8 @@ services:
       context: .
       dockerfile: Dockerfile.streamlit
     restart: unless-stopped
+    env_file:
+      - .env.docker
     environment:
       <<: *project-environment
     ports:

@@ -1,8 +1,6 @@
 .venv/
 .env
 .env.*
-!.env.example
-!.env.docker.example
 .pytest_cache/
 __pycache__/
 *.py[cod]
@@ -10,3 +8,4 @@ data
 .vscode
 notbooks_apoio
 secrets.toml
+src/main.py
