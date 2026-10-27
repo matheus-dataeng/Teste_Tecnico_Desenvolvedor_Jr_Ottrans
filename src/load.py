@@ -39,7 +39,7 @@ def load(df_janeiro: pd.DataFrame, df_fevereiro: pd.DataFrame, engine: Engine) -
         
             for nome_tabela, df in dfs_tabela:
                 if inspector.has_table(nome_tabela):
-                        con.execute(text(F"TRUNCATE TABLE {nome_tabela}"))
+                        con.execute(text(f"TRUNCATE TABLE {nome_tabela}"))
                         
                 df.to_sql(name= nome_tabela, con= con, index= False, chunksize= 5000, if_exists= "append")
                 logger.info("Carga dos dois meses concluida")
